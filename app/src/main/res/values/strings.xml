@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ClassReminder</string>
+    <string name="title_alarm">Alarm</string>
+    <string name="title_schedule">Schedule</string>
+    <string name="title_add">Add Reminder</string>
+    <string name="title_edit">Edit Reminder</string>
+    <string name="title_license">License</string>
+    <string name="no_reminders">Click on the plus button below to begin creating your reminders!</string>
+
+    <string name="add_reminder">Reminder</string>
+    <string name="details">Details</string>
+    <string name="date">Date</string>
+    <string name="time_start">Time Start</string>
+    <string name="time_end">Time End</string>
+    <string name="class_application">Class Application</string>
+    <string name="instructor_name">Instructor Name</string>
+
+    <string name="action_discard_reminder">Discard Reminder</string>
+    <string name="action_save_reminder">Save Reminder</string>
+
+
+    // add activity
+    <string name="select_day_title">Select Day</string>
+    <string name="title_blank_error">Reminder Title cannot be blank!</string>
+    <string name="discarded">Discarded</string>
+</resources>

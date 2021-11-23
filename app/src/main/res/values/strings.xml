@@ -26,5 +26,6 @@
     <string name="select_day_title">Select Day</string>
     <string name="select_class_application_title">Select Day</string>
     <string name="title_blank_error">Reminder Title cannot be blank!</string>
+    <string name="date_blank_error">Reminder Date cannot be blank!</string>
     <string name="discarded">Discarded</string>
 </resources>

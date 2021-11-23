@@ -66,11 +66,10 @@ public class ReminderEditActivity extends AppCompatActivity implements
     private String[] mTimeEndSplit;
     private int mReceivedID;
     private int mHourStart, mMinuteStart, mHourEnd, mMinuteEnd;
-    private long mRepeatTime;
-    private Calendar mCalendar;
+    private int selectedTimePicker;
     private Reminder mReceivedReminder;
     private ReminderDatabase rb;
-    // private AlarmReceiver mAlarmReceiver;
+    private AlarmReceiver mAlarmReceiver;
 
     // Constant Intent String
     public static final String EXTRA_REMINDER_ID = "Reminder_ID";
@@ -89,12 +88,12 @@ public class ReminderEditActivity extends AppCompatActivity implements
     // RegEx to split string days
     private static final String DATE_DELIMITER = ", ";
 
+    // check time picker dialog selected (time start / time end)
+    private static final int TIME_START = 1;
+    private static final int TIME_END = 2;
+
     // Constant values in milliseconds
-    private static final long milMinute = 60000L;
-    private static final long milHour = 3600000L;
-    private static final long milDay = 86400000L;
     private static final long milWeek = 604800000L;
-    private static final long milMonth = 2592000000L;
 
 
     @Override
@@ -210,8 +209,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
         }
 
         // Obtain Date and Time details
-        mCalendar = Calendar.getInstance();
-        // mAlarmReceiver = new AlarmReceiver();
+        mAlarmReceiver = new AlarmReceiver();
 
         mTimeStartSplit = mTimeStart.split(":");
         mTimeEndSplit = mTimeEnd.split(":");
@@ -246,6 +244,12 @@ public class ReminderEditActivity extends AppCompatActivity implements
 
     // On clicking Time picker
     public void setTime(View v){
+        int viewId = v.getId();
+        if(viewId == R.id.time_start_tab) {
+            selectedTimePicker = TIME_START;
+        } else if(viewId == R.id.time_end_tab) {
+            selectedTimePicker = TIME_END;
+        }
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(
                 this,
@@ -255,6 +259,30 @@ public class ReminderEditActivity extends AppCompatActivity implements
         );
         tpd.setThemeDark(false);
         tpd.show(getFragmentManager(), "Timepickerdialog");
+    }
+
+    // Obtain time from time picker
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        if(selectedTimePicker == TIME_START) {
+            mHourStart = hourOfDay;
+            mMinuteStart = minute;
+            if (minute < 10) {
+                mTimeStart = hourOfDay + ":" + "0" + minute;
+            } else {
+                mTimeStart = hourOfDay + ":" + minute;
+            }
+            mTimeStartText.setText(mTimeStart);
+        } else if(selectedTimePicker == TIME_END) {
+            mHourEnd = hourOfDay;
+            mMinuteEnd = minute;
+            if (minute < 10) {
+                mTimeEnd = hourOfDay + ":" + "0" + minute;
+            } else {
+                mTimeEnd = hourOfDay + ":" + minute;
+            }
+            mTimeEndText.setText(mTimeEnd);
+        }
     }
 
     // On clicking select day
@@ -294,19 +322,6 @@ public class ReminderEditActivity extends AppCompatActivity implements
         });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    // Obtain time from time picker
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
-        mHourStart = hourOfDay;
-        mMinuteStart = minute;
-        if (minute < 10) {
-            mTimeStart = hourOfDay + ":" + "0" + minute;
-        } else {
-            mTimeStart = hourOfDay + ":" + minute;
-        }
-        mTimeStartText.setText(mTimeStart);
     }
 
     public void setClassApplicationIcon(View v) {
@@ -438,11 +453,11 @@ public class ReminderEditActivity extends AppCompatActivity implements
         }
 
         // Cancel existing notification of the reminder by using its ID
-        // mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID);
+        mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID);
 
         // Create a new notification
         if (mActive.equals("true")) {
-            // new AlarmReceiver().setAlarm(getApplicationContext(), calendars, ID);
+            new AlarmReceiver().setRepeatAlarm(getApplicationContext(), calendars, mReceivedID, milWeek);
         }
 
         // Create toast to confirm update
@@ -481,8 +496,9 @@ public class ReminderEditActivity extends AppCompatActivity implements
                 mTitleText.setText(mTitle);
 
                 if (mTitleText.getText().toString().length() == 0)
-                    mTitleText.setError("Reminder Title cannot be blank!");
-
+                    mTitleText.setError(getResources().getText(R.string.title_blank_error));
+                else if (mDateText.getText().toString().length() == 0)
+                    mDateText.setError(getResources().getText(R.string.date_blank_error));
                 else {
                     updateReminder();
                 }

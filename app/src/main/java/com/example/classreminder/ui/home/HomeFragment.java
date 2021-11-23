@@ -28,6 +28,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bignerdranch.android.multiselector.SwappingHolder;
+import com.example.classreminder.AlarmReceiver;
 import com.example.classreminder.DateTimeSorter;
 import com.example.classreminder.R;
 import com.example.classreminder.Reminder;
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
     private int mTempPost;
     private LinkedHashMap<Integer, Integer> IDmap = new LinkedHashMap<>();
     private MultiSelector mMultiSelector = new MultiSelector();
+    private AlarmReceiver mAlarmReceiver;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +90,9 @@ public class HomeFragment extends Fragment {
         mAdapter = new SimpleAdapter();
         mAdapter.setItemCount(getDefaultItemCount());
         mList.setAdapter(mAdapter);
+
+        // Initialize alarm
+        mAlarmReceiver = new AlarmReceiver();
         return view;
     }
 
@@ -176,7 +181,7 @@ public class HomeFragment extends Fragment {
                             // Remove reminder from recycler view
                             mAdapter.removeItemSelected(i);
                             // Delete reminder alarm
-                            // mAlarmReceiver.cancelAlarm(getApplicationContext(), id);
+                            mAlarmReceiver.cancelAlarm(getActivity().getApplicationContext(), id);
                         }
                     }
 
@@ -336,9 +341,9 @@ public class HomeFragment extends Fragment {
             // On long press enter action mode with context menu
             @Override
             public boolean onLongClick(View v) {
-//                AppCompatActivity activity = MainActivity.this;
-//                activity.startSupportActionMode(mDeleteMode);
-//                mMultiSelector.setSelected(this, true);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.startSupportActionMode(mDeleteMode);
+                mMultiSelector.setSelected(this, true);
                 return true;
             }
 

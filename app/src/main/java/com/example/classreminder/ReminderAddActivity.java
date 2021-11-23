@@ -55,8 +55,9 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
     private Calendar mCalendar;
-    private int mYear, mMonth, mHourStart, mMinuteStart, mDay;
+    private int mHourStart, mMinuteStart;
     private int mHourEnd, mMinuteEnd;
+    private int selectedTimePicker;
     private String mTitle;
     private String mTimeStart;
     private String mTimeEnd;
@@ -79,6 +80,10 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
     // RegEx to split string days
     private static final String DATE_DELIMITER = ", ";
+
+    // check time picker dialog selected (time start / time end)
+    private static final int TIME_START = 1;
+    private static final int TIME_END = 2;
 
     // Constant values in milliseconds
     private static final long milMinute = 60000L;
@@ -119,14 +124,11 @@ public class ReminderAddActivity extends AppCompatActivity implements
         mMinuteStart = mCalendar.get(Calendar.MINUTE);
         mHourEnd = mCalendar.get(Calendar.HOUR_OF_DAY) + 1;
         mMinuteEnd = mCalendar.get(Calendar.MINUTE);
-        mYear = mCalendar.get(Calendar.YEAR);
-        mMonth = mCalendar.get(Calendar.MONTH) + 1;
-        mDay = mCalendar.get(Calendar.DATE);
 
-        mDate = "Sunday";
+        mDate = getResources().getStringArray(R.array.days)[0];
         mTimeStart = mHourStart + ":" + String.format("%02d", mMinuteStart);
         mTimeEnd = mHourEnd + ":" + String.format("%02d", mMinuteEnd);
-        mClassApp = "Zoom";
+        mClassApp = getResources().getStringArray(R.array.class_application)[0];
         mClassDescription = "insert you class link";
         mInstructor = "your instructor name (optional)";
 
@@ -221,6 +223,12 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
     // On clicking Time picker
     public void setTime(View v){
+        int viewId = v.getId();
+        if(viewId == R.id.time_start_tab) {
+            selectedTimePicker = TIME_START;
+        } else if(viewId == R.id.time_end_tab) {
+            selectedTimePicker = TIME_END;
+        }
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(
                 this,
@@ -230,6 +238,30 @@ public class ReminderAddActivity extends AppCompatActivity implements
         );
         tpd.setThemeDark(false);
         tpd.show(getFragmentManager(), "Timepickerdialog");
+    }
+
+    // Obtain time from time picker
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        if(selectedTimePicker == TIME_START) {
+            mHourStart = hourOfDay;
+            mMinuteStart = minute;
+            if (minute < 10) {
+                mTimeStart = hourOfDay + ":" + "0" + minute;
+            } else {
+                mTimeStart = hourOfDay + ":" + minute;
+            }
+            mTimeStartText.setText(mTimeStart);
+        } else if(selectedTimePicker == TIME_END) {
+            mHourEnd = hourOfDay;
+            mMinuteEnd = minute;
+            if (minute < 10) {
+                mTimeEnd = hourOfDay + ":" + "0" + minute;
+            } else {
+                mTimeEnd = hourOfDay + ":" + minute;
+            }
+            mTimeEndText.setText(mTimeEnd);
+        }
     }
 
     // On clicking select day
@@ -269,19 +301,6 @@ public class ReminderAddActivity extends AppCompatActivity implements
         });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    // Obtain time from time picker
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
-        mHourStart = hourOfDay;
-        mMinuteStart = minute;
-        if (minute < 10) {
-            mTimeStart = hourOfDay + ":" + "0" + minute;
-        } else {
-            mTimeStart = hourOfDay + ":" + minute;
-        }
-        mTimeStartText.setText(mTimeStart);
     }
 
     public void setClassApplicationIcon(View v) {
@@ -404,7 +423,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
         // Create a new notification
         if (mActive.equals("true")) {
-            // new AlarmReceiver().setAlarm(getApplicationContext(), calendars, ID);
+            new AlarmReceiver().setRepeatAlarm(getApplicationContext(), calendars, ID, milWeek);
         }
 
         // Create toast to confirm new reminder
@@ -445,6 +464,8 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
                 if (mTitleText.getText().toString().length() == 0)
                     mTitleText.setError(getResources().getText(R.string.title_blank_error));
+                else if (mDateText.getText().toString().length() == 0)
+                    mDateText.setError(getResources().getText(R.string.date_blank_error));
                 else {
                     saveReminder();
                 }

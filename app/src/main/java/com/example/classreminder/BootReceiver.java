@@ -73,7 +73,7 @@ public class BootReceiver extends BroadcastReceiver {
                 mMinuteStart = Integer.parseInt(mTimeSplit[1]);
 
                 // Cancel existing notification of the reminder by using its ID
-                mAlarmReceiver.cancelAlarm(context, mReceivedID);
+                mAlarmReceiver.cancelAlarm(context, mReceivedID, currentSelectedDay.length);
 
                 Calendar[] calendars = new Calendar[selectedDayInt.size()];
 

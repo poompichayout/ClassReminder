@@ -30,6 +30,7 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.example.classreminder.AlarmReceiver;
 import com.example.classreminder.DateTimeSorter;
+import com.example.classreminder.NotificationReceivedActivity;
 import com.example.classreminder.R;
 import com.example.classreminder.Reminder;
 import com.example.classreminder.ReminderDatabase;
@@ -181,7 +182,7 @@ public class HomeFragment extends Fragment {
                             // Remove reminder from recycler view
                             mAdapter.removeItemSelected(i);
                             // Delete reminder alarm
-                            mAlarmReceiver.cancelAlarm(getActivity().getApplicationContext(), id);
+                            mAlarmReceiver.cancelAlarm(getActivity().getApplicationContext(), id, temp.getDate().length);
                         }
                     }
 

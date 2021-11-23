@@ -53,11 +53,15 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         ReminderDatabase rb = new ReminderDatabase(context);
         Reminder reminder = rb.getReminder(mReceivedID);
         String mTitle = reminder.getTitle();
+        String mTimeStart = reminder.getTimeStart();
+        String mTimeEnd = reminder.getTimeEnd();
+        String mClassApp = reminder.getApplicationTitle();
+        String mClassDescription = reminder.getClassDescription();
 
         createNotificationChannel(context, mTitle);
 
         // Create intent to open ReminderEditActivity on notification click
-        Intent editIntent = new Intent(context, ReminderEditActivity.class);
+        Intent editIntent = new Intent(context, NotificationReceivedActivity.class);
         editIntent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, Integer.toString(mReceivedID));
         PendingIntent mClick = PendingIntent.getActivity(context, Integer.parseInt(extra), editIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -65,9 +69,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setSmallIcon(R.drawable.ic_alarm_on_white_24dp)
-                .setContentTitle(context.getResources().getString(R.string.app_name))
+                .setContentTitle(context.getResources().getString(R.string.app_name) + ": " + mTitle)
+                .setContentText(mTimeStart + " - " + mTimeEnd + ": " + mClassApp + " - " + mClassDescription)
                 .setTicker(mTitle)
-                .setContentText(mTitle)
+                .setShowWhen(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentIntent(mClick)
@@ -108,12 +113,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 PackageManager.DONT_KILL_APP);
     }
 
-    public void cancelAlarm(Context context, int ID) {
+    public void cancelAlarm(Context context, int ID, int dayLength) {
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        // Cancel Alarm using Reminder ID
-        mPendingIntent = PendingIntent.getBroadcast(context, ID, new Intent(context, AlarmReceiver.class), 0);
-        mAlarmManager.cancel(mPendingIntent);
+        // Cancel All Alarm for multiple days
+        for(int i=0; i<dayLength; i++) {
+            // Cancel Alarm using Reminder ID
+            mPendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(ID + "000" + i), new Intent(context, AlarmReceiver.class), 0);
+            mAlarmManager.cancel(mPendingIntent);
+        }
+
 
         // Disable alarm
         ComponentName receiver = new ComponentName(context, BootReceiver.class);

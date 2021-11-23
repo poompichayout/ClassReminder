@@ -457,7 +457,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
         }
 
         // Cancel existing notification of the reminder by using its ID
-        mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID);
+        mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID, selectedDayInt.size());
 
         // Create a new notification
         if (mActive.equals("true")) {

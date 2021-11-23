@@ -19,9 +19,11 @@ package com.example.classreminder;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,14 +41,12 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
 
-public class ReminderAddActivity extends AppCompatActivity implements
+public class ReminderEditActivity extends AppCompatActivity implements
         TimePickerDialog.OnTimeSetListener {
 
     private Toolbar mToolbar;
@@ -54,9 +54,6 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private TextView mDateText, mTimeStartText, mTimeEndText, mClassAppText, mClassDescriptionText, mInstructorText;
     private FloatingActionButton mFAB1;
     private FloatingActionButton mFAB2;
-    private Calendar mCalendar;
-    private int mYear, mMonth, mHourStart, mMinuteStart, mDay;
-    private int mHourEnd, mMinuteEnd;
     private String mTitle;
     private String mTimeStart;
     private String mTimeEnd;
@@ -65,6 +62,18 @@ public class ReminderAddActivity extends AppCompatActivity implements
     private String mClassDescription;
     private String mInstructor;
     private String mActive;
+    private String[] mTimeStartSplit;
+    private String[] mTimeEndSplit;
+    private int mReceivedID;
+    private int mHourStart, mMinuteStart, mHourEnd, mMinuteEnd;
+    private long mRepeatTime;
+    private Calendar mCalendar;
+    private Reminder mReceivedReminder;
+    private ReminderDatabase rb;
+    // private AlarmReceiver mAlarmReceiver;
+
+    // Constant Intent String
+    public static final String EXTRA_REMINDER_ID = "Reminder_ID";
 
     // Values for orientation change
     private static final String KEY_TITLE = "title_key";
@@ -107,32 +116,12 @@ public class ReminderAddActivity extends AppCompatActivity implements
 
         // Setup Toolbar
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.title_add);
+        getSupportActionBar().setTitle(R.string.title_edit);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        // Initialize default values
-        mActive = "true";
-
-        mCalendar = Calendar.getInstance();
-        mHourStart = mCalendar.get(Calendar.HOUR_OF_DAY);
-        mMinuteStart = mCalendar.get(Calendar.MINUTE);
-        mHourEnd = mCalendar.get(Calendar.HOUR_OF_DAY) + 1;
-        mMinuteEnd = mCalendar.get(Calendar.MINUTE);
-        mYear = mCalendar.get(Calendar.YEAR);
-        mMonth = mCalendar.get(Calendar.MONTH) + 1;
-        mDay = mCalendar.get(Calendar.DATE);
-
-        mDate = "Sunday";
-        mTimeStart = mHourStart + ":" + String.format("%02d", mMinuteStart);
-        mTimeEnd = mHourEnd + ":" + String.format("%02d", mMinuteEnd);
-        mClassApp = "Zoom";
-        mClassDescription = "insert you class link";
-        mInstructor = "your instructor name (optional)";
-
         // Setup Reminder Title EditText
         mTitleText.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -146,7 +135,25 @@ public class ReminderAddActivity extends AppCompatActivity implements
             public void afterTextChanged(Editable s) {}
         });
 
+        // Get reminder id from intent
+        mReceivedID = Integer.parseInt(getIntent().getStringExtra(EXTRA_REMINDER_ID));
+
+        // Get reminder using reminder id
+        rb = new ReminderDatabase(this);
+        mReceivedReminder = rb.getReminder(mReceivedID);
+
+        // Get values from reminder
+        mTitle = mReceivedReminder.getTitle();
+        mDate = TextUtils.join(DATE_DELIMITER, mReceivedReminder.getDate());
+        mTimeStart = mReceivedReminder.getTimeStart();
+        mTimeEnd = mReceivedReminder.getTimeEnd();
+        mClassApp = mReceivedReminder.getApplicationTitle();
+        mClassDescription = mReceivedReminder.getClassDescription();
+        mInstructor = mReceivedReminder.getInstructorName();
+        mActive = mReceivedReminder.getActive();
+
         // Setup TextViews using reminder values
+        mTitleText.setText(mTitle);
         mDateText.setText(mDate);
         mTimeStartText.setText(mTimeStart);
         mTimeEndText.setText(mTimeEnd);
@@ -201,6 +208,19 @@ public class ReminderAddActivity extends AppCompatActivity implements
             mFAB1.setVisibility(View.GONE);
             mFAB2.setVisibility(View.VISIBLE);
         }
+
+        // Obtain Date and Time details
+        mCalendar = Calendar.getInstance();
+        // mAlarmReceiver = new AlarmReceiver();
+
+        mTimeStartSplit = mTimeStart.split(":");
+        mTimeEndSplit = mTimeEnd.split(":");
+
+        mHourStart = Integer.parseInt(mTimeStartSplit[0]);
+        mMinuteStart = Integer.parseInt(mTimeEndSplit[1]);
+
+        mHourEnd = Integer.parseInt(mTimeEndSplit[0]);
+        mMinuteEnd = Integer.parseInt(mTimeEndSplit[1]);
     }
 
     // To save state on device rotation
@@ -217,6 +237,11 @@ public class ReminderAddActivity extends AppCompatActivity implements
         outState.putCharSequence(KEY_CLASS_DESCRIPTION, mClassDescriptionText.getText());
         outState.putCharSequence(KEY_INSTRUCTOR_NAME, mInstructorText.getText());
         outState.putCharSequence(KEY_ACTIVE, mActive);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     // On clicking Time picker
@@ -349,6 +374,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
         alert.show();
     }
 
+
     // On clicking the active button
     public void selectFab1(View v) {
         mFAB1 = (FloatingActionButton) findViewById(R.id.starred1);
@@ -367,9 +393,23 @@ public class ReminderAddActivity extends AppCompatActivity implements
         mActive = "false";
     }
 
-    // On clicking the save button
-    public void saveReminder(){
-        ReminderDatabase rb = new ReminderDatabase(this);
+    // On clicking the update button
+    public void updateReminder(){
+        // Set new values in the reminder
+        mReceivedReminder.setTitle(mTitle);
+        mReceivedReminder.setDate(mDate.split(DATE_DELIMITER));
+        mReceivedReminder.setTimeStart(mTimeStart);
+        mReceivedReminder.setTimeEnd(mTimeEnd);
+        mReceivedReminder.setApplicationTitle(mClassApp);
+        mReceivedReminder.setColor("#ff0000");
+        mReceivedReminder.setClassDescription(mClassDescription);
+        mReceivedReminder.setInstructorName(mInstructor);
+        mReceivedReminder.setActive(mActive);
+
+        // Update reminder
+        rb.updateReminder(mReceivedReminder);
+
+        // set day
         final String[] items = getResources().getStringArray(R.array.days); // days : Sunday, Monday, ...
         final String[] currentSelectedDay = mDate.split(DATE_DELIMITER);
         ArrayList<Integer> selectedDayInt = new ArrayList<>();
@@ -381,11 +421,6 @@ public class ReminderAddActivity extends AppCompatActivity implements
             }
         }
 
-        // Creating Reminder
-        int ID = rb.addReminder(
-                new Reminder(mTitle, currentSelectedDay, mTimeStart, mTimeEnd, "#ff0000",
-                        mClassApp, mClassDescription, mInstructor, mActive)
-        );
         Calendar[] calendars = new Calendar[selectedDayInt.size()];
 
         for(int i=0; i<selectedDayInt.size(); i++) {
@@ -402,15 +437,17 @@ public class ReminderAddActivity extends AppCompatActivity implements
             }
         }
 
+        // Cancel existing notification of the reminder by using its ID
+        // mAlarmReceiver.cancelAlarm(getApplicationContext(), mReceivedID);
+
         // Create a new notification
         if (mActive.equals("true")) {
             // new AlarmReceiver().setAlarm(getApplicationContext(), calendars, ID);
         }
 
-        // Create toast to confirm new reminder
-        Toast.makeText(getApplicationContext(), "Saved",
+        // Create toast to confirm update
+        Toast.makeText(getApplicationContext(), "Edited",
                 Toast.LENGTH_SHORT).show();
-
         onBackPressed();
     }
 
@@ -444,16 +481,17 @@ public class ReminderAddActivity extends AppCompatActivity implements
                 mTitleText.setText(mTitle);
 
                 if (mTitleText.getText().toString().length() == 0)
-                    mTitleText.setError(getResources().getText(R.string.title_blank_error));
+                    mTitleText.setError("Reminder Title cannot be blank!");
+
                 else {
-                    saveReminder();
+                    updateReminder();
                 }
                 return true;
 
             // On clicking discard reminder button
             // Discard any changes
             case R.id.discard_reminder:
-                Toast.makeText(getApplicationContext(), getResources().getText(R.string.discarded),
+                Toast.makeText(getApplicationContext(), "Changes Discarded",
                         Toast.LENGTH_SHORT).show();
 
                 onBackPressed();

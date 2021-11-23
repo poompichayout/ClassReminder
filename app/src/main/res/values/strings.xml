@@ -13,6 +13,7 @@
     <string name="time_start">Time Start</string>
     <string name="time_end">Time End</string>
     <string name="class_application">Class Application</string>
+    <string name="class_description">Class Description</string>
     <string name="instructor_name">Instructor Name</string>
 
     <string name="action_discard_reminder">Discard Reminder</string>
@@ -20,7 +21,10 @@
 
 
     // add activity
+    <string name="notification_enable">Enable Notification</string>
+    <string name="notification_disable">Disable Notification</string>
     <string name="select_day_title">Select Day</string>
+    <string name="select_class_application_title">Select Day</string>
     <string name="title_blank_error">Reminder Title cannot be blank!</string>
     <string name="discarded">Discarded</string>
 </resources>

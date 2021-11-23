@@ -22,7 +22,8 @@ public class Reminder {
     private int mID;
     private String mClassTitle;
     private String[] mDate;
-    private String mTime;
+    private String mTimeStart;
+    private String mTimeEnd;
     private String mColor;
     private String mApplicationTitle;
     private String mClassDescription;
@@ -30,11 +31,12 @@ public class Reminder {
     private String mActive;
 
 
-    public Reminder(int ID, String Title, String[] Date, String Time, String color, String applicationTitle, String classDescription, String instructorName, String Active){
+    public Reminder(int ID, String Title, String[] Date, String TimeStart, String TimeEnd, String color, String applicationTitle, String classDescription, String instructorName, String Active){
         mID = ID;
         mClassTitle = Title;
         mDate = Date;
-        mTime = Time;
+        mTimeStart = TimeStart;
+        mTimeEnd = TimeEnd;
         mInstructorName = instructorName;
         mColor = color;
         mApplicationTitle = applicationTitle;
@@ -42,10 +44,11 @@ public class Reminder {
         mActive = Active;
     }
 
-    public Reminder(String Title, String[] Date, String Time, String color, String applicationTitle, String classDescription, String instructorName, String Active){
+    public Reminder(String Title, String[] Date, String TimeStart, String TimeEnd, String color, String applicationTitle, String classDescription, String instructorName, String Active){
         mClassTitle = Title;
         mDate = Date;
-        mTime = Time;
+        mTimeStart = TimeStart;
+        mTimeEnd = TimeEnd;
         mInstructorName = instructorName;
         mColor = color;
         mApplicationTitle = applicationTitle;
@@ -79,12 +82,20 @@ public class Reminder {
         mDate = date;
     }
 
-    public String getTime() {
-        return mTime;
+    public String getTimeStart() {
+        return mTimeStart;
     }
 
-    public void setTime(String time) {
-        mTime = time;
+    public void setTimeStart(String timeStart) {
+        mTimeStart = timeStart;
+    }
+
+    public String getTimeEnd() {
+        return mTimeEnd;
+    }
+
+    public void setTimeEnd(String timeEnd) {
+        mTimeEnd = timeEnd;
     }
 
     public String getApplicationTitle() {

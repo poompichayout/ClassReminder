@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ReminderDatabase extends SQLiteOpenHelper {
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "ReminderDatabase";
@@ -42,7 +42,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_TITLE = "title";
     private static final String KEY_DATE = "date";
-    private static final String KEY_TIME = "time";
+    private static final String KEY_TIME_START = "time_start";
+    private static final String KEY_TIME_END = "time_end";
     private static final String KEY_COLOR = "color";
     private static final String KEY_APPLICATION_TITLE = "app_title";
     private static final String KEY_CLASS_DESCRIPTION = "class_description";
@@ -50,7 +51,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     private static final String KEY_ACTIVE = "active";
 
     // Date Column Delimiter
-    private static final String DATE_DELIMITER = ",";
+    private static final String DATE_DELIMITER = ", ";
 
     public ReminderDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -64,13 +65,15 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_TITLE + " TEXT,"
                 + KEY_DATE + " TEXT,"
-                + KEY_TIME + " INTEGER,"
-                + KEY_COLOR + "TEXT,"
-                + KEY_APPLICATION_TITLE + "TEXT,"
-                + KEY_CLASS_DESCRIPTION + "TEXT,"
-                + KEY_INSTRUCTOR_NAME + "TEXT,"
+                + KEY_TIME_START + " INTEGER,"
+                + KEY_TIME_END + " INTEGER,"
+                + KEY_COLOR + " TEXT,"
+                + KEY_APPLICATION_TITLE + " TEXT,"
+                + KEY_CLASS_DESCRIPTION + " TEXT,"
+                + KEY_INSTRUCTOR_NAME + " TEXT,"
                 + KEY_ACTIVE + " BOOLEAN" + ")";
         db.execSQL(CREATE_REMINDERS_TABLE);
+        System.out.println("CREATED DATABASE");
     }
 
     // Upgrading database
@@ -92,7 +95,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
 
         values.put(KEY_TITLE , reminder.getTitle());
         values.put(KEY_DATE , TextUtils.join(DATE_DELIMITER, reminder.getDate()));
-        values.put(KEY_TIME , reminder.getTime());
+        values.put(KEY_TIME_START , reminder.getTimeStart());
+        values.put(KEY_TIME_END , reminder.getTimeEnd());
         values.put(KEY_COLOR, reminder.getColor());
         values.put(KEY_APPLICATION_TITLE, reminder.getApplicationTitle());
         values.put(KEY_CLASS_DESCRIPTION, reminder.getClassDescription());
@@ -102,6 +106,7 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         // Inserting Row
         long ID = db.insert(TABLE_REMINDERS, null, values);
         db.close();
+        System.out.println("Database id: " + ID);
         return (int) ID;
     }
 
@@ -114,7 +119,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                                 KEY_ID,
                                 KEY_TITLE,
                                 KEY_DATE,
-                                KEY_TIME,
+                                KEY_TIME_START,
+                                KEY_TIME_END,
                                 KEY_COLOR,
                                 KEY_APPLICATION_TITLE,
                                 KEY_CLASS_DESCRIPTION,
@@ -129,7 +135,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
 
         Reminder reminder = new Reminder(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
                 cursor.getString(2).split(DATE_DELIMITER), cursor.getString(3), cursor.getString(4),
-                cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8));
+                cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                cursor.getString(9));
 
         return reminder;
     }
@@ -151,12 +158,13 @@ public class ReminderDatabase extends SQLiteOpenHelper {
                 reminder.setID(Integer.parseInt(cursor.getString(0)));
                 reminder.setTitle(cursor.getString(1));
                 reminder.setDate(cursor.getString(2).split(DATE_DELIMITER));
-                reminder.setTime(cursor.getString(3));
-                reminder.setColor(cursor.getString(4));
-                reminder.setApplicationTitle(cursor.getString(5));
-                reminder.setClassDescription(cursor.getString(6));
-                reminder.setInstructorName(cursor.getString(7));
-                reminder.setActive(cursor.getString(8));
+                reminder.setTimeStart(cursor.getString(3));
+                reminder.setTimeEnd(cursor.getString(4));
+                reminder.setColor(cursor.getString(5));
+                reminder.setApplicationTitle(cursor.getString(6));
+                reminder.setClassDescription(cursor.getString(7));
+                reminder.setInstructorName(cursor.getString(8));
+                reminder.setActive(cursor.getString(9));
 
                 // Adding Reminders to list
                 reminderList.add(reminder);
@@ -170,9 +178,10 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         String countQuery = "SELECT * FROM " + TABLE_REMINDERS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery,null);
+        int count = cursor.getCount();
         cursor.close();
 
-        return cursor.getCount();
+        return count;
     }
 
     // Updating single Reminder
@@ -181,7 +190,8 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE , reminder.getTitle());
         values.put(KEY_DATE , TextUtils.join(DATE_DELIMITER, reminder.getDate()));
-        values.put(KEY_TIME , reminder.getTime());
+        values.put(KEY_TIME_START , reminder.getTimeStart());
+        values.put(KEY_TIME_END , reminder.getTimeEnd());
         values.put(KEY_COLOR, reminder.getColor());
         values.put(KEY_APPLICATION_TITLE, reminder.getApplicationTitle());
         values.put(KEY_CLASS_DESCRIPTION, reminder.getClassDescription());

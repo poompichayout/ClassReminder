@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ReminderAddActivity" android:exported="true" android:label="@string/title_add" />
+        <activity android:name=".ReminderEditActivity" android:exported="true" android:label="@string/title_edit" />
     </application>
 
 </manifest>

@@ -24,7 +24,6 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private Toolbar mToolbar;
     private FloatingActionButton fabAdd;
 
     @Override
@@ -35,12 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Initialize views
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         fabAdd = findViewById(R.id.fab);
 
-        // Setup toolbar
-        setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.app_name);
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

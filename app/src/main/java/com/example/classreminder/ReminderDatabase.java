@@ -24,8 +24,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ReminderDatabase extends SQLiteOpenHelper {
@@ -209,5 +214,44 @@ public class ReminderDatabase extends SQLiteOpenHelper {
         db.delete(TABLE_REMINDERS, KEY_ID + "=?",
                 new String[]{String.valueOf(reminder.getID())});
         db.close();
+    }
+
+    // Get reminder on specific date
+    public List<Reminder> getAllRemindersOnDate(Calendar calendar) {
+        List<Reminder> reminderList = new ArrayList<>();
+
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String weekdays[] = dfs.getWeekdays();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        String nameOfDay = weekdays[day];
+
+        // Select all Query
+        String selectQuery = "SELECT * FROM " + TABLE_REMINDERS
+                + " WHERE " + KEY_DATE + " LIKE \'%" + nameOfDay + "%\';";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // Looping through all rows and adding to list
+        if(cursor.moveToFirst()){
+            do{
+                Reminder reminder = new Reminder();
+                reminder.setID(Integer.parseInt(cursor.getString(0)));
+                reminder.setTitle(cursor.getString(1));
+                reminder.setDate(cursor.getString(2).split(DATE_DELIMITER));
+                reminder.setTimeStart(cursor.getString(3));
+                reminder.setTimeEnd(cursor.getString(4));
+                reminder.setColor(cursor.getString(5));
+                reminder.setApplicationTitle(cursor.getString(6));
+                reminder.setClassDescription(cursor.getString(7));
+                reminder.setInstructorName(cursor.getString(8));
+                reminder.setActive(cursor.getString(9));
+
+                // Adding Reminders to list
+                reminderList.add(reminder);
+            } while (cursor.moveToNext());
+        }
+
+        return reminderList;
     }
 }

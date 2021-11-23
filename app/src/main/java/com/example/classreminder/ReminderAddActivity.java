@@ -41,9 +41,11 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class ReminderAddActivity extends AppCompatActivity implements
@@ -419,6 +421,8 @@ public class ReminderAddActivity extends AppCompatActivity implements
             if(calendars[i].getTimeInMillis() < System.currentTimeMillis()) {
                 calendars[i].add(Calendar.DAY_OF_YEAR, 7);
             }
+            Date date = calendars[i].getTime();
+            System.out.println(new SimpleDateFormat("yyyy-M-dd hh:mm").format(date));
         }
 
         // Create a new notification

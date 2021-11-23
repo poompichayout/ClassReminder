@@ -388,13 +388,11 @@ public class HomeFragment extends Fragment {
         public List<ReminderItem> generateData(int count) {
             ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
             HashMap<String, String> mapDay = new HashMap<>();
-            mapDay.put("Sunday", "Sun");
-            mapDay.put("Monday", "Mon");
-            mapDay.put("Tuesday", "Tue");
-            mapDay.put("Wednesday", "Wed");
-            mapDay.put("Thursday", "Thu");
-            mapDay.put("Friday", "Fri");
-            mapDay.put("Saturday", "Sat");
+            String[] fullDay = getResources().getStringArray(R.array.days);
+            String[] abbreviationDay = getResources().getStringArray(R.array.days_abbreviation);
+            for(int i=0; i<fullDay.length; i++) {
+                mapDay.put(fullDay[i], abbreviationDay[i]);
+            }
 
             // Get all reminders from the database
             List<Reminder> reminders = rb.getAllReminders();

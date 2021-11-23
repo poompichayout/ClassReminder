@@ -10,6 +10,16 @@
         <item>Saturday</item>
     </array>
 
+    <array name="days_abbreviation">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tues</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </array>
+
     <array name="class_application">
         <item>Zoom</item>
         <item>Microsoft Teams</item>

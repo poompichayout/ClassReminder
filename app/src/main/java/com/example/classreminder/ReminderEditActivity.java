@@ -41,9 +41,11 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class ReminderEditActivity extends AppCompatActivity implements
@@ -450,6 +452,8 @@ public class ReminderEditActivity extends AppCompatActivity implements
             if(calendars[i].getTimeInMillis() < System.currentTimeMillis()) {
                 calendars[i].add(Calendar.DAY_OF_YEAR, 7);
             }
+            Date date = calendars[i].getTime();
+            System.out.println(new SimpleDateFormat("yyyy-M-dd hh:mm").format(date));
         }
 
         // Cancel existing notification of the reminder by using its ID

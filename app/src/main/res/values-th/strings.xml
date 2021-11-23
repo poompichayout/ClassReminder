@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ClassReminder</string>
+    <string name="title_alarm">แจ้งเตือน</string>
+    <string name="title_schedule">ปฏิทิน</string>
+    <string name="title_add">เพิ่มการแจ้งเตือน</string>
+    <string name="title_edit">แก้ไขการแจ้งเตือน</string>
+    <string name="title_license">ลิขสิทธิ์</string>
+    <string name="no_reminders">กดปุ่มบวกด้านล่างเพื่อเริ่มต้นการสร้างการแจ้งเตือนของคุณ!</string>
+    <string name="no_reminders_today">วันนี้ไม่มีงาน เย้!</string>
+
+    <string name="add_reminder">การแจ้งเตือน</string>
+    <string name="details">รายละเอียด</string>
+    <string name="date">วัน</string>
+    <string name="time_start">เวลาเริ่มต้น</string>
+    <string name="time_end">เวลาสิ้นสุด</string>
+    <string name="class_application">แอปพลิเคชันที่ใช้เรียน</string>
+    <string name="class_description">รายละเอียดห้องเรียน</string>
+    <string name="instructor_name">ชื่ออาจารย์ผู้สอน</string>
+
+    <string name="action_discard_reminder">ละทิ้งการตั้งค่า</string>
+    <string name="action_save_reminder">บันทึกการแจ้งเตือน</string>
+
+
+    // add activity
+    <string name="notification_enable">เปิดการแจ้งเตือน</string>
+    <string name="notification_disable">ปิดการแจ้งเตือน</string>
+    <string name="select_day_title">เลือกวัน</string>
+    <string name="select_class_application_title">เลือกแอปพลิเคชั่น</string>
+    <string name="title_blank_error">หัวข้อการแจ้งเตือนไม่สามารถเป็นค่าว่างได้!</string>
+    <string name="date_blank_error">วันไม่สามารถเป็นค่าว่างได้!</string>
+    <string name="discarded">ละทิ้งการตั้งค่า</string>
+</resources>

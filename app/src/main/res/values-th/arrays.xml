@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="days">
+        <item>อาทิตย์</item>
+        <item>จันทร์</item>
+        <item>อังคาร</item>
+        <item>พุธ</item>
+        <item>พฤหัสบดี</item>
+        <item>ศุกร์</item>
+        <item>เสาร์</item>
+    </array>
+
+    <array name="days_abbreviation">
+        <item>อา</item>
+        <item>จ</item>
+        <item>อ</item>
+        <item>พ</item>
+        <item>พฤ</item>
+        <item>ศ</item>
+        <item>ส</item>
+    </array>
+</resources>

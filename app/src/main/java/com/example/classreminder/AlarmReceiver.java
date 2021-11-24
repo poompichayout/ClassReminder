@@ -96,7 +96,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             // Put Reminder ID in Intent Extra
             Intent intent = new Intent(context, AlarmReceiver.class);
             intent.putExtra(ReminderEditActivity.EXTRA_REMINDER_ID, ID + "000" + i);
-            mPendingIntent = PendingIntent.getBroadcast(context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             mPendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(ID + "000" + i), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             // Start alarm using initial notification time and repeat interval time

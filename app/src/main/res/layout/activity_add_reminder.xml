@@ -56,8 +56,7 @@
             android:textColorHint="@color/primary_text_disabled_material_dark"
             android:inputType="textCapWords|textMultiLine"
             android:layout_marginEnd="16dp"
-            android:layout_height="140dp"
-            android:autofillHints="" />
+            android:layout_height="140dp" />
 
     </LinearLayout>
 
@@ -242,7 +241,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="32dp"
                     android:contentDescription="@string/class_application"
-                    android:src="@drawable/ic_view_day_grey600_24dp" />
+                    android:src="@drawable/ic_baseline_apps_24" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -288,7 +287,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="32dp"
                     android:contentDescription="@string/class_description"
-                    android:src="@drawable/ic_view_day_grey600_24dp" />
+                    android:src="@drawable/ic_baseline_description_24" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

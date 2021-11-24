@@ -59,7 +59,11 @@ public class NotificationReceivedActivity extends AppCompatActivity {
         + " " +  mReceivedReminder.getTimeStart() + " - " + mReceivedReminder.getTimeEnd();
         mDateAndTimeText.setText(dateAndTime);
         mClassApp.setText(mReceivedReminder.getApplicationTitle());
-        mClassLink.setText(mReceivedReminder.getClassDescription());
+        if(mReceivedReminder.getClassDescription().equals(getResources().getString(R.string.class_description_placeholder))) {
+            mClassLink.setText(R.string.no_class_link);
+        } else {
+            mClassLink.setText(mReceivedReminder.getClassDescription());
+        }
     }
 
     public void setReminderTitle(String title) {

@@ -46,6 +46,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 
 public class ReminderAddActivity extends AppCompatActivity implements
@@ -131,8 +134,8 @@ public class ReminderAddActivity extends AppCompatActivity implements
         mTimeStart = mHourStart + ":" + String.format("%02d", mMinuteStart);
         mTimeEnd = mHourEnd + ":" + String.format("%02d", mMinuteEnd);
         mClassApp = getResources().getStringArray(R.array.class_application)[0];
-        mClassDescription = "insert you class link";
-        mInstructor = "your instructor name (optional)";
+        mClassDescription = getResources().getString(R.string.class_description_placeholder);
+        mInstructor = getResources().getString(R.string.instructor_name_placeholder);
 
         // Setup Reminder Title EditText
         mTitleText.addTextChangedListener(new TextWatcher() {
@@ -325,18 +328,18 @@ public class ReminderAddActivity extends AppCompatActivity implements
     public void setClassDescription(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
-        builder.setTitle("Enter Class Description (link etc.)");
+        builder.setTitle(R.string.enter_your_description);
 
         builder.setView(edittext);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mClassDescription = edittext.getText().toString();
                 mClassDescriptionText.setText(mClassDescription);
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }
@@ -349,18 +352,18 @@ public class ReminderAddActivity extends AppCompatActivity implements
     public void setInstructorName(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
-        builder.setTitle("Enter Instructor\'s Name");
+        builder.setTitle(R.string.enter_your_instructor_name);
 
         builder.setView(edittext);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mInstructor = edittext.getText().toString();
                 mInstructorText.setText(mInstructor);
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }
@@ -402,6 +405,15 @@ public class ReminderAddActivity extends AppCompatActivity implements
             }
         }
 
+        // if current language is THAI then change them to English before save to database
+        if(items[0].equals("อาทิตย์")) {
+            ThaiEngDateMap translator = new ThaiEngDateMap();
+            HashMap<String, String> thaiToEn = translator.getThaiToEnglish();
+            for(int i=0; i<currentSelectedDay.length; i++) {
+                currentSelectedDay[i] = thaiToEn.get(currentSelectedDay[i]);
+            }
+        }
+
         // Creating Reminder
         int ID = rb.addReminder(
                 new Reminder(mTitle, currentSelectedDay, mTimeStart, mTimeEnd, "#ff0000",
@@ -431,7 +443,7 @@ public class ReminderAddActivity extends AppCompatActivity implements
         }
 
         // Create toast to confirm new reminder
-        Toast.makeText(getApplicationContext(), "Saved",
+        Toast.makeText(getApplicationContext(), R.string.saved,
                 Toast.LENGTH_SHORT).show();
 
         onBackPressed();

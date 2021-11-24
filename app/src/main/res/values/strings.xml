@@ -7,6 +7,9 @@
     <string name="title_license">License</string>
     <string name="no_reminders">Click on the plus button below to begin creating your reminders!</string>
     <string name="no_reminders_today">No task today hooray!</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+
 
     <string name="add_reminder">Reminder</string>
     <string name="details">Details</string>
@@ -26,7 +29,19 @@
     <string name="notification_disable">Disable Notification</string>
     <string name="select_day_title">Select Day</string>
     <string name="select_class_application_title">Select Application</string>
+    <string name="enter_your_description">Enter Class Description (link etc.)</string>
+    <string name="enter_your_instructor_name">Enter Instructor\'s Name</string>
+    <string name="class_description_placeholder">Place your classroom link here</string>
+    <string name="instructor_name_placeholder">Place class instructor\'s name here</string>
     <string name="title_blank_error">Reminder Title cannot be blank!</string>
     <string name="date_blank_error">Reminder Date cannot be blank!</string>
+    <string name="saved">Saved!</string>
     <string name="discarded">Discarded</string>
+
+    // edit activity
+    <string name="changes_discarded">Changes Discarded</string>
+    <string name="edited">Edited</string>
+
+    // received activity
+    <string name="no_class_link">You have not provided class link neither description</string>
 </resources>

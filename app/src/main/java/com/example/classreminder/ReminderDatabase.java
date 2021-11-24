@@ -220,10 +220,11 @@ public class ReminderDatabase extends SQLiteOpenHelper {
     public List<Reminder> getAllRemindersOnDate(Calendar calendar) {
         List<Reminder> reminderList = new ArrayList<>();
 
-        DateFormatSymbols dfs = new DateFormatSymbols();
+        DateFormatSymbols dfs = new DateFormatSymbols(Locale.ENGLISH);
         String weekdays[] = dfs.getWeekdays();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         String nameOfDay = weekdays[day];
+        System.out.println(nameOfDay);
 
         // Select all Query
         String selectQuery = "SELECT * FROM " + TABLE_REMINDERS

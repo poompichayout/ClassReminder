@@ -35,6 +35,7 @@ import com.example.classreminder.R;
 import com.example.classreminder.Reminder;
 import com.example.classreminder.ReminderDatabase;
 import com.example.classreminder.ReminderEditActivity;
+import com.example.classreminder.ThaiEngDateMap;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -388,11 +389,13 @@ public class HomeFragment extends Fragment {
         // Generate real data for each item
         public List<ReminderItem> generateData(int count) {
             ArrayList<SimpleAdapter.ReminderItem> items = new ArrayList<>();
-            HashMap<String, String> mapDay = new HashMap<>();
-            String[] fullDay = getResources().getStringArray(R.array.days);
-            String[] abbreviationDay = getResources().getStringArray(R.array.days_abbreviation);
-            for(int i=0; i<fullDay.length; i++) {
-                mapDay.put(fullDay[i], abbreviationDay[i]);
+            ThaiEngDateMap translator = new ThaiEngDateMap();
+            HashMap<String, String> mapDay;
+
+            if(getResources().getString(R.string.date).equals("วัน")) {
+                mapDay = translator.getThaiToAbbreviation();
+            } else {
+                mapDay = translator.getEnglishToAbbreviation();
             }
 
             // Get all reminders from the database

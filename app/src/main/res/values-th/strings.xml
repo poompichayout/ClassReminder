@@ -8,6 +8,8 @@
     <string name="title_license">ลิขสิทธิ์</string>
     <string name="no_reminders">กดปุ่มบวกด้านล่างเพื่อเริ่มต้นการสร้างการแจ้งเตือนของคุณ!</string>
     <string name="no_reminders_today">วันนี้ไม่มีงาน เย้!</string>
+    <string name="done">เสร็จสิ้น</string>
+    <string name="cancel">ยกเลิก</string>
 
     <string name="add_reminder">การแจ้งเตือน</string>
     <string name="details">รายละเอียด</string>
@@ -15,7 +17,7 @@
     <string name="time_start">เวลาเริ่มต้น</string>
     <string name="time_end">เวลาสิ้นสุด</string>
     <string name="class_application">แอปพลิเคชันที่ใช้เรียน</string>
-    <string name="class_description">รายละเอียดห้องเรียน</string>
+    <string name="class_description">ลิงก์ห้องเรียน</string>
     <string name="instructor_name">ชื่ออาจารย์ผู้สอน</string>
 
     <string name="action_discard_reminder">ละทิ้งการตั้งค่า</string>
@@ -27,7 +29,19 @@
     <string name="notification_disable">ปิดการแจ้งเตือน</string>
     <string name="select_day_title">เลือกวัน</string>
     <string name="select_class_application_title">เลือกแอปพลิเคชั่น</string>
+    <string name="enter_your_description">ป้อนลิงก์ห้องเรียน</string>
+    <string name="enter_your_instructor_name">ป้อนชื่ออาจารย์ผู้สอน</string>
+    <string name="class_description_placeholder">ป้อนลิงก์ห้องเรียน</string>
+    <string name="instructor_name_placeholder">ป้อนชื่ออาจารย์ผู้สอน</string>
     <string name="title_blank_error">หัวข้อการแจ้งเตือนไม่สามารถเป็นค่าว่างได้!</string>
     <string name="date_blank_error">วันไม่สามารถเป็นค่าว่างได้!</string>
+    <string name="saved">บันทึก!</string>
     <string name="discarded">ละทิ้งการตั้งค่า</string>
+
+    // edit activity
+    <string name="changes_discarded">ยกเลิกการแก้ไข</string>
+    <string name="edited">แก้ไขเสร็จสิ้น</string>
+
+    // received activity
+    <string name="no_class_link">คุณไม่ได้ป้อนลิงก์หรือรายละเอียดของห้องเรียนไว้</string>
 </resources>

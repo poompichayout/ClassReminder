@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class ReminderEditActivity extends AppCompatActivity implements
@@ -152,6 +153,16 @@ public class ReminderEditActivity extends AppCompatActivity implements
         mClassDescription = mReceivedReminder.getClassDescription();
         mInstructor = mReceivedReminder.getInstructorName();
         mActive = mReceivedReminder.getActive();
+
+        // check is application a THAI?
+        if(getResources().getString(R.string.date).equals("วัน")) {
+            String[] engDate = mReceivedReminder.getDate();
+            ThaiEngDateMap translator = new ThaiEngDateMap();
+            HashMap<String, String> enToTh = translator.getEnglishToThai();
+            for(int i=0; i<engDate.length; i++) {
+                engDate[i] = enToTh.get(engDate[i]);
+            }
+        }
 
         // Setup TextViews using reminder values
         mTitleText.setText(mTitle);
@@ -346,18 +357,18 @@ public class ReminderEditActivity extends AppCompatActivity implements
     public void setClassDescription(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
-        builder.setTitle("Enter Class Description (link etc.)");
+        builder.setTitle(R.string.enter_your_description);
 
         builder.setView(edittext);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mClassDescription = edittext.getText().toString();
                 mClassDescriptionText.setText(mClassDescription);
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }
@@ -370,18 +381,18 @@ public class ReminderEditActivity extends AppCompatActivity implements
     public void setInstructorName(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(this);
-        builder.setTitle("Enter Instructor\'s Name");
+        builder.setTitle(R.string.enter_your_instructor_name);
 
         builder.setView(edittext);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mInstructor = edittext.getText().toString();
                 mInstructorText.setText(mInstructor);
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }
@@ -414,7 +425,6 @@ public class ReminderEditActivity extends AppCompatActivity implements
     public void updateReminder(){
         // Set new values in the reminder
         mReceivedReminder.setTitle(mTitle);
-        mReceivedReminder.setDate(mDate.split(DATE_DELIMITER));
         mReceivedReminder.setTimeStart(mTimeStart);
         mReceivedReminder.setTimeEnd(mTimeEnd);
         mReceivedReminder.setApplicationTitle(mClassApp);
@@ -422,9 +432,6 @@ public class ReminderEditActivity extends AppCompatActivity implements
         mReceivedReminder.setClassDescription(mClassDescription);
         mReceivedReminder.setInstructorName(mInstructor);
         mReceivedReminder.setActive(mActive);
-
-        // Update reminder
-        rb.updateReminder(mReceivedReminder);
 
         // set day
         final String[] items = getResources().getStringArray(R.array.days); // days : Sunday, Monday, ...
@@ -437,6 +444,19 @@ public class ReminderEditActivity extends AppCompatActivity implements
                 }
             }
         }
+
+        // if current language is THAI then change them to English before save to database
+        if(items[0].equals("อาทิตย์")) {
+            ThaiEngDateMap translator = new ThaiEngDateMap();
+            HashMap<String, String> thaiToEn = translator.getThaiToEnglish();
+            for(int i=0; i<currentSelectedDay.length; i++) {
+                currentSelectedDay[i] = thaiToEn.get(currentSelectedDay[i]);
+            }
+        }
+        mReceivedReminder.setDate(currentSelectedDay);
+
+        // Update reminder
+        rb.updateReminder(mReceivedReminder);
 
         Calendar[] calendars = new Calendar[selectedDayInt.size()];
 
@@ -465,7 +485,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
         }
 
         // Create toast to confirm update
-        Toast.makeText(getApplicationContext(), "Edited",
+        Toast.makeText(getApplicationContext(), R.string.edited,
                 Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
@@ -511,7 +531,7 @@ public class ReminderEditActivity extends AppCompatActivity implements
             // On clicking discard reminder button
             // Discard any changes
             case R.id.discard_reminder:
-                Toast.makeText(getApplicationContext(), "Changes Discarded",
+                Toast.makeText(getApplicationContext(), R.string.changes_discarded,
                         Toast.LENGTH_SHORT).show();
 
                 onBackPressed();

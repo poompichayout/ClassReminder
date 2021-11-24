@@ -26,6 +26,7 @@ import com.example.classreminder.DateTimeSorter;
 import com.example.classreminder.R;
 import com.example.classreminder.Reminder;
 import com.example.classreminder.ReminderDatabase;
+import com.example.classreminder.ThaiEngDateMap;
 import com.example.classreminder.ui.home.HomeFragment;
 
 import org.w3c.dom.Text;
@@ -272,11 +273,13 @@ public class NotificationsFragment extends Fragment {
         // Generate real data for each item
         public List<ReminderItem> generateData(int count, Calendar calendar) {
             ArrayList<ReminderItem> items = new ArrayList<>();
-            HashMap<String, String> mapDay = new HashMap<>();
-            String[] fullDay = getResources().getStringArray(R.array.days);
-            String[] abbreviationDay = getResources().getStringArray(R.array.days_abbreviation);
-            for(int i=0; i<fullDay.length; i++) {
-                mapDay.put(fullDay[i], abbreviationDay[i]);
+            ThaiEngDateMap translator = new ThaiEngDateMap();
+            HashMap<String, String> mapDay;
+
+            if(getResources().getString(R.string.date).equals("วัน")) {
+                mapDay = translator.getThaiToAbbreviation();
+            } else {
+                mapDay = translator.getEnglishToAbbreviation();
             }
 
             // Get all reminders from the database
